@@ -53,7 +53,7 @@ int main() {
                 read(STDIN_FILENO, &curStrLength, sizeof(int));
                 char* c_curStr = (char *) malloc(sizeof(char) * curStrLength);
                 read(STDIN_FILENO, c_curStr, sizeof(char) * curStrLength);
-                std::string curStr(c_curStr);
+                //std::string curStr(c_curStr);
 
                 if (c_curStr[0] >= 65 && c_curStr[0] <= 90) {
                     
@@ -62,7 +62,7 @@ int main() {
                     for(int j = 0; j < 16; ++j){
                     	newC_curStr[j] = message[j];
                     }
-                    for(int j = 16; j < curStrLength + 17; ++j){
+                    for(int j = 16; j < curStrLength + 16; ++j){
                     	newC_curStr[j] = c_curStr[j-16];
                     }
                     newC_curStr[curStrLength + 16] = '\n';
@@ -83,7 +83,8 @@ int main() {
             }
             
             write(errorsFileDs[1], &END_CODE, sizeof(int));
-
+            close(ruleFileDs[0]);
+            close(errorsFileDs[1]);
             break;
         }
         default:{ // It's a parent process.
@@ -103,7 +104,7 @@ int main() {
                 for (int j = 0; j < curStrLength; ++j){
                     c_curStr[j] = curStr[j];
                 }
-                c_curStr[curStrLength] = '\0'
+                //c_curStr[curStrLength] = '\0'
                 ;
                 write(ruleFileDs[1], &curStrLength, sizeof(int));
                 write(ruleFileDs[1], c_curStr, sizeof(char) * curStrLength);
@@ -133,7 +134,7 @@ int main() {
                 for(int j = 0; j < 18; ++j){
                 	newC_errorStr[j] = message[j];
                 }
-                for(int j = 18; j < curStrLength + 19; ++j){
+                for(int j = 18; j < curStrLength + 18; ++j){
                 	newC_errorStr[j] = c_errorStr[j-18];
                 }
                 newC_errorStr[curStrLength + 18] = '\n';
@@ -141,14 +142,13 @@ int main() {
 
                 free(c_errorStr);
                 free(newC_errorStr);
+                
 
             }
+            close(errorsFileDs[0]);
 
         }
-            close(ruleFileDs[1]);
-            close(ruleFileDs[0]);
-            close(errorsFileDs[0]);
-            close(errorsFileDs[1]);
+            
             close(file);
     }
 

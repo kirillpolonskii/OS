@@ -1,4 +1,4 @@
 CХХ ?= g++
-#CFLAGS ?= -Werror -pedantic
+FLAGS ?= -fsanitize=address -g
 parent: parent.cpp
-	${CХХ} parent.cpp -o parent
+	${CХХ} ${FLAGS} parent.cpp -o parent

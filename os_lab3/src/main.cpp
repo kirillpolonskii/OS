@@ -194,7 +194,6 @@ int main(int argv, char* argc[]){
 			std::cin >> srcMatrix[i][j];
 		}
 	}
-	printMatrix(srcMatrix);
 	
 	std::vector<std::thread> threads(maxThreads);
 	std::vector<std::vector<int>> resMatrix(N, std::vector<int> (M));

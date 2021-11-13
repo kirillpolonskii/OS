@@ -1,0 +1,5 @@
+Correct string: DGBT
+Correct string: H
+Correct string: SGfgb
+Incorrect string: qwe
+Incorrect string: p
