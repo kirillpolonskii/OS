@@ -6,35 +6,11 @@
 #include <sys/wait.h>
 #include <string>
 #include "string.h"
-#include <vector>
 #include "semaphore.h"
 #include <fcntl.h>
 #include "unistd.h"
 
 #define END_CODE 4
-/*
-Итак, здесь вместо пайпов я буду использовать отображаемые в память файлы (memory-mapped files).
-Проблема1: я хз, как передать в дочерний процесс кол-во строк. Пока придумал только запихнуть в
-структуру строк ещё одну переменную с этим числом.
-
-Проблема 2: смещение offset в mmap должно быть кратно размеру страницы, возвращенному 
-sysconf (_SC_PAGE_SIZE) (у меня это 4096)
-
-Проблема 3: похоже, нужно два семафора.
-*/
-
-typedef struct
-{
-    int length;
-    std::string str;
-} MyStr;
-
-struct Data
-{
-    Data(int n) : strings(n) {}
-    int strAmount;
-    std::vector<std::string> strings;
-};
 
 int main() {
     std::cout << "Enter outFile name:" << std::endl;
@@ -45,7 +21,6 @@ int main() {
     int strAmount;
     std::cin >> strAmount;
 
-    //int END_CODE = 100000;
     int outFile;
     if ((outFile = open(outFileName.c_str(), O_WRONLY | O_TRUNC | O_CREAT, S_IWUSR | S_IRUSR)) == -1){
         return 1;
@@ -57,7 +32,6 @@ int main() {
         return 1;
     }
     
-    //std::mutex mtx;
     char* memDataCheck = (char*) mmap(NULL, 4096, PROT_READ | PROT_WRITE, MAP_SHARED, fdCheck, 0);
     char* memDataError = (char*) mmap(NULL, 4096, PROT_READ | PROT_WRITE, MAP_SHARED, fdError, 0);
     if (memDataCheck == MAP_FAILED || memDataError == MAP_FAILED){
@@ -76,7 +50,6 @@ int main() {
         std::cout << "Error in sem_open child\n";
     }
     
-    //sem_init(&sem_child, 1, 0);
 
     int pid = fork();	// When fork () is called, two completely identical processes arise.
     					// All code after the fork () is executed twice, both in the child and parent processes
@@ -90,7 +63,7 @@ int main() {
             // if we need to transfer data from parent to child, then the parent closes the descriptor
             // for reading, and the child closes the descriptor for writing
             
-            usleep(100000);
+            //usleep(100000);
             int val;
 
             if (sem_wait(sem_par) == -1){
@@ -103,7 +76,6 @@ int main() {
             dup2(outFile, STDOUT_FILENO);
 
             int i = 0, j = 0, indForErr = 0;
-            //for (int i = 0; i < strAmount; ++i) {
             while (i < strAmount){
                 if (memDataCheck[j] == '\n'){
                     ++i;
@@ -160,12 +132,11 @@ int main() {
                 if (j == 0) getchar();
                 char curSymb;
                 scanf("%c", &curSymb);
-                //std::cout << curSymb << "**\n";
+
                 memDataCheck[j] = curSymb;
+                
                 if (curSymb == '\n'){
-                    //std::cout << "Met slash n" << std::endl;
                     ++i;
-                    //memDataCheck[j] = curSymb;
 
                 }
 
@@ -178,7 +149,6 @@ int main() {
 
             sem_post(sem_par);
 
-            usleep(100000);
             if (sem_wait(sem_child) == -1){
                 std::cout << "PARENT: error in sem_child\n";
             }
