@@ -4,7 +4,7 @@
 #include "stdio.h"
 
 int main(){
-	int command;
+	int command; 
 	while(scanf("%d ", &command) != EOF){
 		if (command == 1){
 			float A, deltaX;

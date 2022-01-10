@@ -1,5 +1,4 @@
-Correct string: DGBT
-Correct string: H
-Correct string: SGfgb
-Incorrect string: qwe
-Incorrect string: p
+Correct string: WER
+Correct string: F
+Incorrect string: wer
+Incorrect string: vewrg

@@ -7,13 +7,13 @@ prog1_2: lib2.so prog1.c
 	gcc prog1.c -o prog1_2 -L. -l2 -Wl,-rpath,.
 
 prog2: prog2.c lib1.so lib2.so
-	gcc prog2.c -o prog2 -L. -ldl -Wl,-rpath,.
+	gcc prog2.c -o prog2 -lm -L. -ldl -Wl,-rpath,.
 
 lib1.so: implementation1.o
-	gcc -shared implementation1.o -o lib1.so
+	gcc -shared implementation1.o -o lib1.so -lm
 
 lib2.so: implementation2.o
-	gcc -shared implementation2.o -o lib2.so
+	gcc -shared implementation2.o -o lib2.so -lm
 
 implementation1.o: implementation1.c
 	gcc -c -fPIC implementation1.c -o implementation1.o -lm

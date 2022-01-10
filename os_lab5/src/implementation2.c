@@ -1,5 +1,4 @@
 #include "implementation2.h"
-//#include "math.h"
 #include "stdio.h"
 float Derivative(float A, float deltaX){
 	printf("in 2st impl\n");
